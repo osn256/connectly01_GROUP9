@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',  # Add Django REST Framework OSIAS N
     'rest_framework_simplejwt',
+    'posts',
+    #'users',
 ]
 """
 REST_FRAMEWORK = {

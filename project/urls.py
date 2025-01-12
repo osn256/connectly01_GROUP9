@@ -20,12 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),  # DRF login/logout
+    path('posts/', include('posts.urls')),
 ]
-
-
-"""
-http://127.0.0.1:8000/admin/
-http://127.0.0.1:8000/api-auth/login/
-python manage.py createsuperuser
-
-"""
