@@ -1,0 +1,110 @@
+{
+    "sourceFile": "posts/urls.py",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 23,
+            "patches": [
+                {
+                    "date": 1737298572190,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1737301019690,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,20 +1,11 @@\n-\"\"\"\"\r\n from django.urls import path\r\n from . import views\r\n-\r\n-urlpatterns = [\r\n-    path('users/', views.get_users, name='get_users'),\r\n-    path('users/create/', views.create_user, name='create_user'),\r\n-    path('posts/', views.get_posts, name='get_posts'),\r\n-    path('posts/create/', views.create_post, name='create_post'),\r\n-]\r\n-\"\"\"\r\n-\r\n-from django.urls import path\r\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n \r\n urlpatterns = [\r\n+    # CBV URLs\r\n     path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n ]\r\n+\r\n"
+                },
+                {
+                    "date": 1737302714076,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,10 +2,12 @@\n from . import views\r\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n \r\n urlpatterns = [\r\n-    # CBV URLs\r\n+    path('users/', views.get_users, name='get_users'),\r\n+    path('users/create/', views.create_user, name='create_user'),\r\n+    path('posts/', views.get_posts, name='get_posts'),\r\n+    path('posts/create/', views.create_post, name='create_post'),\r\n     path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n ]\r\n-\r\n"
+                },
+                {
+                    "date": 1737302756037,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,9 +2,8 @@\n from . import views\r\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n \r\n urlpatterns = [\r\n-    path('users/', views.get_users, name='get_users'),\r\n     path('users/create/', views.create_user, name='create_user'),\r\n     path('posts/', views.get_posts, name='get_posts'),\r\n     path('posts/create/', views.create_post, name='create_post'),\r\n     path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n"
+                },
+                {
+                    "date": 1737302789843,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,9 @@\n from . import views\r\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n \r\n urlpatterns = [\r\n+    path('users/', views.get_users, name='get_users'),\r\n     path('users/create/', views.create_user, name='create_user'),\r\n     path('posts/', views.get_posts, name='get_posts'),\r\n     path('posts/create/', views.create_post, name='create_post'),\r\n     path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n"
+                },
+                {
+                    "date": 1737302899041,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,12 +2,8 @@\n from . import views\r\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n \r\n urlpatterns = [\r\n-    path('users/', views.get_users, name='get_users'),\r\n-    path('users/create/', views.create_user, name='create_user'),\r\n-    path('posts/', views.get_posts, name='get_posts'),\r\n-    path('posts/create/', views.create_post, name='create_post'),\r\n     path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n ]\r\n"
+                },
+                {
+                    "date": 1737303050905,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,15 @@\n from . import views\r\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n \r\n urlpatterns = [\r\n+    # Function-based views\r\n+    path('users/', views.get_users, name='get_users'),\r\n+    path('users/create/', views.create_user, name='create_user'),\r\n+    path('posts/', views.get_posts, name='get_posts'),\r\n+    path('posts/create/', views.create_post, name='create_post'),\r\n+\r\n+    # Class-based views\r\n     path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n ]\r\n"
+                },
+                {
+                    "date": 1737303118457,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,8 +9,8 @@\n     path('posts/', views.get_posts, name='get_posts'),\r\n     path('posts/create/', views.create_post, name='create_post'),\r\n \r\n     # Class-based views\r\n-    path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n-    path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n+    path('users/list-create/', UserListCreate.as_view(), name='user-list-create'),\r\n+    path('posts/list-create/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n ]\r\n"
+                },
+                {
+                    "date": 1737303136860,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n     path('users/create/', views.create_user, name='create_user'),\r\n     path('posts/', views.get_posts, name='get_posts'),\r\n     path('posts/create/', views.create_post, name='create_post'),\r\n \r\n-    # Class-based views\r\n+    # Class-based views with different URL patterns\r\n     path('users/list-create/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/list-create/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n ]\r\n"
+                },
+                {
+                    "date": 1737303384850,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,9 +3,9 @@\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n \r\n urlpatterns = [\r\n     # Function-based views\r\n-    path('users/', views.get_users, name='get_users'),\r\n+    #path('users/', views.get_users, name='get_users'),\r\n     path('users/create/', views.create_user, name='create_user'),\r\n     path('posts/', views.get_posts, name='get_posts'),\r\n     path('posts/create/', views.create_post, name='create_post'),\r\n \r\n"
+                },
+                {
+                    "date": 1737303417281,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n \r\n urlpatterns = [\r\n     # Function-based views\r\n     #path('users/', views.get_users, name='get_users'),\r\n-    path('users/create/', views.create_user, name='create_user'),\r\n+    #path('users/create/', views.create_user, name='create_user'),\r\n     path('posts/', views.get_posts, name='get_posts'),\r\n     path('posts/create/', views.create_post, name='create_post'),\r\n \r\n     # Class-based views with different URL patterns\r\n"
+                },
+                {
+                    "date": 1737303424981,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n urlpatterns = [\r\n     # Function-based views\r\n     #path('users/', views.get_users, name='get_users'),\r\n     #path('users/create/', views.create_user, name='create_user'),\r\n-    path('posts/', views.get_posts, name='get_posts'),\r\n+    #path('posts/', views.get_posts, name='get_posts'),\r\n     path('posts/create/', views.create_post, name='create_post'),\r\n \r\n     # Class-based views with different URL patterns\r\n     path('users/list-create/', UserListCreate.as_view(), name='user-list-create'),\r\n"
+                },
+                {
+                    "date": 1737303431635,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,9 +6,9 @@\n     # Function-based views\r\n     #path('users/', views.get_users, name='get_users'),\r\n     #path('users/create/', views.create_user, name='create_user'),\r\n     #path('posts/', views.get_posts, name='get_posts'),\r\n-    path('posts/create/', views.create_post, name='create_post'),\r\n+    #path('posts/create/', views.create_post, name='create_post'),\r\n \r\n     # Class-based views with different URL patterns\r\n     path('users/list-create/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/list-create/', PostListCreate.as_view(), name='post-list-create'),\r\n"
+                },
+                {
+                    "date": 1737303584025,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,9 +6,9 @@\n     # Function-based views\r\n     #path('users/', views.get_users, name='get_users'),\r\n     #path('users/create/', views.create_user, name='create_user'),\r\n     #path('posts/', views.get_posts, name='get_posts'),\r\n-    #path('posts/create/', views.create_post, name='create_post'),\r\n+    path('posts/create/', views.create_post, name='create_post'),\r\n \r\n     # Class-based views with different URL patterns\r\n     path('users/list-create/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/list-create/', PostListCreate.as_view(), name='post-list-create'),\r\n"
+                },
+                {
+                    "date": 1737303627389,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,16 +1,8 @@\n from django.urls import path\r\n-from . import views\r\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n \r\n urlpatterns = [\r\n-    # Function-based views\r\n-    #path('users/', views.get_users, name='get_users'),\r\n-    #path('users/create/', views.create_user, name='create_user'),\r\n-    #path('posts/', views.get_posts, name='get_posts'),\r\n-    path('posts/create/', views.create_post, name='create_post'),\r\n-\r\n-    # Class-based views with different URL patterns\r\n     path('users/list-create/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/list-create/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n ]\r\n"
+                },
+                {
+                    "date": 1737303848975,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,13 @@\n from django.urls import path\r\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n+from . import views\r\n \r\n urlpatterns = [\r\n-    path('users/list-create/', UserListCreate.as_view(), name='user-list-create'),\r\n-    path('posts/list-create/', PostListCreate.as_view(), name='post-list-create'),\r\n+    path('users/', views.get_users, name='get_users'),\r\n+    path('users/create/', views.create_user, name='create_user'),\r\n+    path('posts/', views.get_posts, name='get_posts'),\r\n+    path('posts/create/', views.create_post, name='create_post'),\r\n+    path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n+    path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n ]\r\n"
+                },
+                {
+                    "date": 1737303879420,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,8 +6,6 @@\n     path('users/', views.get_users, name='get_users'),\r\n     path('users/create/', views.create_user, name='create_user'),\r\n     path('posts/', views.get_posts, name='get_posts'),\r\n     path('posts/create/', views.create_post, name='create_post'),\r\n-    path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n-    path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n-    path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n+    \r\n ]\r\n"
+                },
+                {
+                    "date": 1737303918272,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,6 +6,8 @@\n     path('users/', views.get_users, name='get_users'),\r\n     path('users/create/', views.create_user, name='create_user'),\r\n     path('posts/', views.get_posts, name='get_posts'),\r\n     path('posts/create/', views.create_post, name='create_post'),\r\n-    \r\n+    path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n+    path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n+    path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n ]\r\n"
+                },
+                {
+                    "date": 1737303928593,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,12 +2,9 @@\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n from . import views\r\n \r\n urlpatterns = [\r\n-    path('users/', views.get_users, name='get_users'),\r\n-    path('users/create/', views.create_user, name='create_user'),\r\n-    path('posts/', views.get_posts, name='get_posts'),\r\n-    path('posts/create/', views.create_post, name='create_post'),\r\n+    \r\n     path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n ]\r\n"
+                },
+                {
+                    "date": 1737304145800,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,12 @@\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n from . import views\r\n \r\n urlpatterns = [\r\n+#    path('users/', views.get_users, name='get_users'),\r\n+    path('users/create/', views.create_user, name='create_user'),\r\n+#    path('posts/', views.get_posts, name='get_posts'),\r\n+#   path('posts/create/', views.create_post, name='create_post'),\r\n     \r\n     path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n"
+                },
+                {
+                    "date": 1737304302697,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,12 +2,12 @@\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n from . import views\r\n \r\n urlpatterns = [\r\n-#    path('users/', views.get_users, name='get_users'),\r\n+    path('users/', views.get_users, name='get_users'),\r\n     path('users/create/', views.create_user, name='create_user'),\r\n-#    path('posts/', views.get_posts, name='get_posts'),\r\n-#   path('posts/create/', views.create_post, name='create_post'),\r\n+    path('posts/', views.get_posts, name='get_posts'),\r\n+    path('posts/create/', views.create_post, name='create_post'),\r\n     \r\n     path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n"
+                },
+                {
+                    "date": 1737304355733,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,12 +2,12 @@\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n from . import views\r\n \r\n urlpatterns = [\r\n-    path('users/', views.get_users, name='get_users'),\r\n-    path('users/create/', views.create_user, name='create_user'),\r\n-    path('posts/', views.get_posts, name='get_posts'),\r\n-    path('posts/create/', views.create_post, name='create_post'),\r\n+    #path('users/', views.get_users, name='get_users'),\r\n+    #path('users/create/', views.create_user, name='create_user'),\r\n+    #path('posts/', views.get_posts, name='get_posts'),\r\n+    #path('posts/create/', views.create_post, name='create_post'),\r\n     \r\n     path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n"
+                },
+                {
+                    "date": 1737305663489,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,12 +2,12 @@\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n from . import views\r\n \r\n urlpatterns = [\r\n-    #path('users/', views.get_users, name='get_users'),\r\n-    #path('users/create/', views.create_user, name='create_user'),\r\n-    #path('posts/', views.get_posts, name='get_posts'),\r\n-    #path('posts/create/', views.create_post, name='create_post'),\r\n+    path('users/', views.get_users, name='get_users'),\r\n+    path('users/create/', views.create_user, name='create_user'),\r\n+    path('posts/', views.get_posts, name='get_posts'),\r\n+    path('posts/create/', views.create_post, name='create_post'),\r\n     \r\n     path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n"
+                },
+                {
+                    "date": 1737305710398,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,12 @@\n from django.urls import path\r\n from .views import UserListCreate, PostListCreate, CommentListCreate\r\n-from . import views\r\n \r\n urlpatterns = [\r\n-    path('users/', views.get_users, name='get_users'),\r\n-    path('users/create/', views.create_user, name='create_user'),\r\n-    path('posts/', views.get_posts, name='get_posts'),\r\n-    path('posts/create/', views.create_post, name='create_post'),\r\n+    #path('users/', views.get_users, name='get_users'),\r\n+    #path('users/create/', views.create_user, name='create_user'),\r\n+    #path('posts/', views.get_posts, name='get_posts'),\r\n+    #path('posts/create/', views.create_post, name='create_post'),\r\n     \r\n     path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n     path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n     path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n"
+                }
+            ],
+            "date": 1737298572190,
+            "name": "Commit-0",
+            "content": "\"\"\"\"\r\nfrom django.urls import path\r\nfrom . import views\r\n\r\nurlpatterns = [\r\n    path('users/', views.get_users, name='get_users'),\r\n    path('users/create/', views.create_user, name='create_user'),\r\n    path('posts/', views.get_posts, name='get_posts'),\r\n    path('posts/create/', views.create_post, name='create_post'),\r\n]\r\n\"\"\"\r\n\r\nfrom django.urls import path\r\nfrom .views import UserListCreate, PostListCreate, CommentListCreate\r\n\r\nurlpatterns = [\r\n    path('users/', UserListCreate.as_view(), name='user-list-create'),\r\n    path('posts/', PostListCreate.as_view(), name='post-list-create'),\r\n    path('comments/', CommentListCreate.as_view(), name='comment-list-create'),\r\n]\r\n"
+        }
+    ]
+}

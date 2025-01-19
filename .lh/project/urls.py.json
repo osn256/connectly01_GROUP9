@@ -1,0 +1,74 @@
+{
+    "sourceFile": "project/urls.py",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 14,
+            "patches": [
+                {
+                    "date": 1737298430235,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1737300352198,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,10 +15,16 @@\n     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))\r\n \"\"\"\r\n from django.contrib import admin\r\n from django.urls import path, include\r\n+from . import views\r\n \r\n urlpatterns = [\r\n     path('admin/', admin.site.urls),\r\n     path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n     path('posts/', include('posts.urls')),\r\n+\r\n+    path('users/fbv/', views.get_users, name='get_users'),\r\n+    path('users/fbv/create/', views.create_user, name='create_user'),\r\n+    path('posts/fbv/', views.get_posts, name='get_posts'),\r\n+    path('posts/fbv/create/', views.create_post, name='create_post'),\r\n ]\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1737300410613,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,20 +1,4 @@\n-\"\"\"\r\n-URL configuration for project project.\r\n-\r\n-The `urlpatterns` list routes URLs to views. For more information please see:\r\n-    https://docs.djangoproject.com/en/5.1/topics/http/urls/\r\n-Examples:\r\n-Function views\r\n-    1. Add an import:  from my_app import views\r\n-    2. Add a URL to urlpatterns:  path('', views.home, name='home')\r\n-Class-based views\r\n-    1. Add an import:  from other_app.views import Home\r\n-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')\r\n-Including another URLconf\r\n-    1. Import the include() function: from django.urls import include, path\r\n-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))\r\n-\"\"\"\r\n from django.contrib import admin\r\n from django.urls import path, include\r\n from . import views\r\n \r\n"
+                },
+                {
+                    "date": 1737301335592,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,14 +1,8 @@\n from django.contrib import admin\r\n from django.urls import path, include\r\n-from . import views\r\n-\r\n+ \r\n urlpatterns = [\r\n     path('admin/', admin.site.urls),\r\n     path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n-    path('posts/', include('posts.urls')),\r\n-\r\n-    path('users/fbv/', views.get_users, name='get_users'),\r\n-    path('users/fbv/create/', views.create_user, name='create_user'),\r\n-    path('posts/fbv/', views.get_posts, name='get_posts'),\r\n-    path('posts/fbv/create/', views.create_post, name='create_post'),\r\n+    path('api/posts/', include('posts.urls')),  # Includes URLs from the posts app\r\n ]\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1737301853124,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,6 +3,6 @@\n  \r\n urlpatterns = [\r\n     path('admin/', admin.site.urls),\r\n     path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n-    path('api/posts/', include('posts.urls')),  # Includes URLs from the posts app\r\n+    path('posts/', include('posts.urls')),  # Includes URLs from the posts app\r\n ]\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1737302169458,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,5 +4,7 @@\n urlpatterns = [\r\n     path('admin/', admin.site.urls),\r\n     path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n     path('posts/', include('posts.urls')),  # Includes URLs from the posts app\r\n+    path('posts/posts/', include('posts.urls')),\r\n+    path('posts/comments/', include('comments.urls')),\r\n ]\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1737302325868,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,6 +5,5 @@\n     path('admin/', admin.site.urls),\r\n     path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n     path('posts/', include('posts.urls')),  # Includes URLs from the posts app\r\n     path('posts/posts/', include('posts.urls')),\r\n-    path('posts/comments/', include('comments.urls')),\r\n ]\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1737303509296,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,8 @@\n from django.urls import path, include\r\n  \r\n urlpatterns = [\r\n     path('admin/', admin.site.urls),\r\n-    path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n+    #path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n     path('posts/', include('posts.urls')),  # Includes URLs from the posts app\r\n-    path('posts/posts/', include('posts.urls')),\r\n+    #path('posts/posts/', include('posts.urls')),\r\n ]\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1737303531959,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,6 +4,6 @@\n urlpatterns = [\r\n     path('admin/', admin.site.urls),\r\n     #path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n     path('posts/', include('posts.urls')),  # Includes URLs from the posts app\r\n-    #path('posts/posts/', include('posts.urls')),\r\n+    path('posts/posts/', include('posts.urls')),\r\n ]\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1737303556052,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,8 @@\n from django.urls import path, include\r\n  \r\n urlpatterns = [\r\n     path('admin/', admin.site.urls),\r\n-    #path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n+    path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n     path('posts/', include('posts.urls')),  # Includes URLs from the posts app\r\n     path('posts/posts/', include('posts.urls')),\r\n ]\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1737303699748,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,6 @@\n-from django.contrib import admin\r\n from django.urls import path, include\r\n- \r\n+\r\n urlpatterns = [\r\n     path('admin/', admin.site.urls),\r\n-    path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n-    path('posts/', include('posts.urls')),  # Includes URLs from the posts app\r\n-    path('posts/posts/', include('posts.urls')),\r\n+    path('posts/', include('posts.urls')),\r\n ]\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1737303752359,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,5 @@\n+from django.contrib import admin\r\n from django.urls import path, include\r\n \r\n urlpatterns = [\r\n     path('admin/', admin.site.urls),\r\n"
+                },
+                {
+                    "date": 1737303778603,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,6 +2,7 @@\n from django.urls import path, include\r\n \r\n urlpatterns = [\r\n     path('admin/', admin.site.urls),\r\n+    path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n     path('posts/', include('posts.urls')),\r\n ]\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1737305308748,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,21 @@\n from django.contrib import admin\r\n from django.urls import path, include\r\n+from . import views \r\n \r\n urlpatterns = [\r\n     path('admin/', admin.site.urls),\r\n     path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n     path('posts/', include('posts.urls')),\r\n\\ No newline at end of file\n-]\n+\r\n+    path('users/create/', views.create_user, name='create_user'),\r\n+    path('posts/create/', views.create_post, name='create_post'),\r\n+    path('list/', views.get_posts, name='get_comments'),\r\n+\r\n+   \r\n+]\r\n+\r\n+\r\n+    #path('users/', views.get_users, name='get_users'),\r\n+    #path('users/create/', views.create_user, name='create_user'),\r\n+    #path('posts/', views.get_posts, name='get_posts'),\r\n+    #path('posts/create/', views.create_post, name='create_post'),\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1737305564207,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,21 +1,9 @@\n from django.contrib import admin\r\n from django.urls import path, include\r\n-from . import views \r\n \r\n+\r\n urlpatterns = [\r\n     path('admin/', admin.site.urls),\r\n     path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n     path('posts/', include('posts.urls')),\r\n-\r\n-    path('users/create/', views.create_user, name='create_user'),\r\n-    path('posts/create/', views.create_post, name='create_post'),\r\n-    path('list/', views.get_posts, name='get_comments'),\r\n-\r\n-   \r\n-]\r\n-\r\n-\r\n-    #path('users/', views.get_users, name='get_users'),\r\n-    #path('users/create/', views.create_user, name='create_user'),\r\n-    #path('posts/', views.get_posts, name='get_posts'),\r\n\\ No newline at end of file\n-    #path('posts/create/', views.create_post, name='create_post'),\n+]\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1737298430235,
+            "name": "Commit-0",
+            "content": "\"\"\"\r\nURL configuration for project project.\r\n\r\nThe `urlpatterns` list routes URLs to views. For more information please see:\r\n    https://docs.djangoproject.com/en/5.1/topics/http/urls/\r\nExamples:\r\nFunction views\r\n    1. Add an import:  from my_app import views\r\n    2. Add a URL to urlpatterns:  path('', views.home, name='home')\r\nClass-based views\r\n    1. Add an import:  from other_app.views import Home\r\n    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')\r\nIncluding another URLconf\r\n    1. Import the include() function: from django.urls import include, path\r\n    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))\r\n\"\"\"\r\nfrom django.contrib import admin\r\nfrom django.urls import path, include\r\n\r\nurlpatterns = [\r\n    path('admin/', admin.site.urls),\r\n    path('api-auth/', include('rest_framework.urls')),  # DRF login/logout\r\n    path('posts/', include('posts.urls')),\r\n]"
+        }
+    ]
+}

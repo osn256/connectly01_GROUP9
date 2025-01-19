@@ -1,0 +1,18 @@
+{
+    "sourceFile": "posts/models.py",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1737291804624,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1737291804624,
+            "name": "Commit-0",
+            "content": "from django.db import models\r\n\r\n# Create your models here.\r\nclass User(models.Model):\r\n    username = models.CharField(max_length=100, unique=True)  # User's unique username\r\n    email = models.EmailField(unique=True)  # User's unique email\r\n    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp when the user was created\r\n\r\n    def __str__(self):\r\n        return self.username\r\n\r\nclass Post(models.Model):\r\n    content = models.TextField()  # The text content of the post\r\n    author = models.ForeignKey(User, on_delete=models.CASCADE)  # The user who created the post\r\n    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp when the post was created\r\n\r\n    def __str__(self):\r\n        return self.content[:50]\r\n#added 1 19 2024\r\nclass Comment(models.Model):\r\n    text = models.TextField()\r\n    author = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)\r\n    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)\r\n    created_at = models.DateTimeField(auto_now_add=True)\r\n\r\n\r\n    def __str__(self):\r\n        return f\"Comment by {self.author.username} on Post {self.post.id}\"\r\n"
+        }
+    ]
+}
