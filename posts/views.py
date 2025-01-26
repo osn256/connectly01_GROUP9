@@ -62,6 +62,7 @@ def create_post(request):
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 from .models import User, Post, Comment
 from .serializers import UserSerializer, PostSerializer, CommentSerializer
 
@@ -81,6 +82,26 @@ class UserListCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserDetail(APIView):                      # ADDED TO UPDATE AND DELETE SINGLE USER
+    def get(self, request, id):
+        user = get_object_or_404(User, id=id)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+    def put(self, request, id):
+        user = get_object_or_404(User, id=id)
+        serializer = UserSerializer(user, data=request.data, partial=True)  # Allows partial updates
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        user = get_object_or_404(User, id=id)
+        user.delete()
+        return Response({'message': 'User deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
 class PostListCreate(APIView):
     def get(self, request):
         posts = Post.objects.all()
@@ -96,6 +117,25 @@ class PostListCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class PostDetail(APIView):                      # ADDED TO UPDATE AND DELETE SINGLE USER
+    def get(self, request, id):
+        post = get_object_or_404(Post, id=id)
+        serializer = PostSerializer(post)
+        return Response(serializer.data)
+
+    def put(self, request, id):
+        post = get_object_or_404(Post, id=id)
+        serializer = PostSerializer(post, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        post = get_object_or_404(Post, id=id)
+        post.delete()
+        return Response({'message': 'Post deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
 class CommentListCreate(APIView):
     def get(self, request):
         comments = Comment.objects.all()
@@ -108,3 +148,22 @@ class CommentListCreate(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CommentDetail(APIView):                   # ADDED TO UPDATE AND DELETE SINGLE USER
+    def get(self, request, id):
+        comment = get_object_or_404(Comment, id=id)
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data)
+
+    def put(self, request, id):
+        comment = get_object_or_404(Comment, id=id)
+        serializer = CommentSerializer(comment, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        comment = get_object_or_404(Comment, id=id)
+        comment.delete()
+        return Response({'message': 'Comment deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
