@@ -58,14 +58,12 @@ def create_post(request):
             return JsonResponse({'error': str(e)}, status=400)
 """
 
-#ADDED 1 19 2025
+"""#ADDED 1 19 2025
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.shortcuts import get_object_or_404
 from .models import User, Post, Comment
 from .serializers import UserSerializer, PostSerializer, CommentSerializer
-
 
 class UserListCreate(APIView):
     def get(self, request):
@@ -166,4 +164,197 @@ class CommentDetail(APIView):                   # ADDED TO UPDATE AND DELETE SIN
     def delete(self, request, id):
         comment = get_object_or_404(Comment, id=id)
         comment.delete()
-        return Response({'message': 'Comment deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Comment deleted successfully'}, status=status.HTTP_204_NO_CONTENT)"""
+
+
+"""from rest_framework import viewsets, permissions
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
+from .models import User, Post, Comment
+from .serializers import UserSerializer, PostSerializer, CommentSerializer
+
+
+# ----- User ViewSet -----
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+# ----- Post ViewSet -----
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all().order_by('-created_at')
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk=None):
+        post = get_object_or_404(Post, pk=pk)
+        post.likes.add(request.user)
+        return Response({'status': 'Post liked'})
+
+    @action(detail=True, methods=['post'])
+    def unlike(self, request, pk=None):
+        post = get_object_or_404(Post, pk=pk)
+        post.likes.remove(request.user)
+        return Response({'status': 'Post unliked'})
+
+
+# ----- Comment ViewSet -----
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all().order_by('created_at')
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk=None):
+        comment = get_object_or_404(Comment, pk=pk)
+        comment.likes.add(request.user)
+        return Response({'status': 'Comment liked'})
+
+    @action(detail=True, methods=['post'])
+    def unlike(self, request, pk=None):
+        comment = get_object_or_404(Comment, pk=pk)
+        comment.likes.remove(request.user)
+        return Response({'status': 'Comment unliked'})
+"""
+
+from rest_framework import generics
+from .models import User, Post, Comment
+from .serializers import UserSerializer, PostSerializer, CommentSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+from .permissions import IsAuthorOrReadOnly, IsPostAuthor
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.views import APIView
+from .logger import SingletonLogger
+
+logger = SingletonLogger().get_logger()
+
+# USER VIEWS    
+class UserListCreateView(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]  # Allow any user to create a new user
+
+    def perform_create(self, serializer):
+        user = serializer.save()
+        logger.info(f'User created: {user.username}')
+
+class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]  # Only authenticated users can access
+
+    def perform_update(self, serializer):
+        user = serializer.save()
+        logger.info(f'User updated: {user.username}')
+
+    def perform_destroy(self, instance):
+        logger.info(f'User deleted: {instance.username}')
+        instance.delete()
+
+# POST VIEWS
+class PostListCreateView(generics.ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]  # Only authenticated users can create posts
+
+    def perform_create(self, serializer):
+        post = serializer.save(author=self.request.user)  # Set the author to the currently authenticated user
+        logger.info(f'Post created by {post.author.username}: {post.content[:30]}')
+
+class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated, IsPostAuthor]  # Only the author can edit or delete
+
+    def perform_update(self, serializer):
+        post = serializer.save()
+        logger.info(f'Post updated by {post.author.username}: {post.content[:30]}')
+
+    def perform_destroy(self, instance):
+        logger.info(f'Post deleted by {instance.author.username}: {instance.content[:30]}')
+        instance.delete()
+
+class LikePostView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk, format=None):
+        post = Post.objects.get(pk=pk)
+        post.likes.add(request.user)
+        post.save()
+        logger.info(f'Post liked by {request.user.username}: {post.content[:30]}')
+        return Response({"status": "liked"}, status=status.HTTP_200_OK)
+
+class UnlikePostView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk, format=None):
+        post = Post.objects.get(pk=pk)
+        post.likes.remove(request.user)
+        post.save()
+        logger.info(f'Post unliked by {request.user.username}: {post.content[:30]}')
+        return Response({"status": "unliked"}, status=status.HTTP_200_OK)
+
+# COMMENT VIEWS
+class CommentListCreateView(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]  # Only authenticated users can create comments
+
+    def perform_create(self, serializer):
+        comment = serializer.save(author=self.request.user)
+        logger.info(f'Comment created by {comment.author.username}: {comment.text[:30]}')
+
+class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]  # Only the author can edit or delete
+
+    def perform_update(self, serializer):
+        comment = serializer.save()
+        logger.info(f'Comment updated by {comment.author.username}: {comment.text[:30]}')
+
+    def perform_destroy(self, instance):
+        logger.info(f'Comment deleted by {instance.author.username}: {instance.text[:30]}')
+        instance.delete()
+
+class LikeCommentView(generics.UpdateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]  # Only authenticated users can like comments
+
+    def patch(self, request, *args, **kwargs):
+        comment = self.get_object()
+        comment.likes.add(request.user)
+        comment.save()
+        logger.info(f'Comment liked by {request.user.username}: {comment.text[:30]}')
+        return Response({"status": "liked"}, status=status.HTTP_200_OK)
+
+class UnlikeCommentView(generics.UpdateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]  # Only authenticated users can unlike comments
+
+    def patch(self, request, *args, **kwargs):
+        comment = self.get_object()
+        comment.likes.remove(request.user)
+        comment.save()
+        logger.info(f'Comment unliked by {request.user.username}: {comment.text[:30]}')
+        return Response({"status": "unliked"}, status=status.HTTP_200_OK)
+
+# ADMIN ONLY VIEW
+class AdminOnlyView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        logger.info(f'Admin access by {request.user.username}')
+        return Response({"message": "Welcome, Admin!"})
