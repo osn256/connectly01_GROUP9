@@ -5,4 +5,19 @@ env/
 
 
 
-# CODE:
+# CODES:
+# python3 -m venv env
+# source env/bin/activate
+# pip install -r requirements.txt
+# deactivate
+
+#TO INSTALL
+# pip --version
+# python -m ensurepip --upgrade
+# django-admin --version
+# pip install djangorestframework
+# pip install djangorestframework-simplejwt
+# pip install django-cors-headers
+# 
+# python manage.py migrate 
+# python3 manage.py runserver
