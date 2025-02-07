@@ -27,28 +27,35 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_REDIRECT_URL = 'main_app'         #ADDED 2 7 2025_ 9:12 PM for WEB LOGIN    
+LOGIN_REDIRECT_URL = 'home'             #ADDED 2 5 2025_ 9:12 PM for WEB LOGIN
+LOGOUT_REDIRECT_URL = 'login'           #ADDED 2 5 2025_ 9:12 PM for WEB LOGIN
+
 
 # Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',              #AUTHENTICATION FRAMEWORK
+    'django.contrib.auth',              #AUTHENTICATION FRAMEWORK #ADDED 2 5 2025_ 9:12 PM for WEB LOGIN
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
+    'django.contrib.messages',          #ADDED 2 5 2025_ 9:12 PM for WEB LOGIN
     'django.contrib.staticfiles',
     'rest_framework',  
     'rest_framework_simplejwt',
     'posts',
     'django_extensions',                #ADDED DJANGO EXTENSIONS 2 5 2025
+
 ]
+AUTH_USER_MODEL = 'posts.User'          #ADDED 2 56 2025_ 12:59 PM for WEB LOGIN
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',  # Allow any user to access the API
+        #'rest_framework.permissions.AllowAny',  # Allow any user to access the API
+        'rest_framework.permissions.IsAuthenticated',  # Allow only authenticated users to access the API
     ),
 }
 

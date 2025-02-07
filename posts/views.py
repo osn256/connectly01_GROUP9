@@ -226,17 +226,54 @@ class CommentViewSet(viewsets.ModelViewSet):
         return Response({'status': 'Comment unliked'})
 """
 
-from rest_framework import generics
-from .models import User, Post, Comment
-from .serializers import UserSerializer, PostSerializer, CommentSerializer
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
-from .permissions import IsAuthorOrReadOnly, IsPostAuthor
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.decorators import action
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .models import User, Post, Comment, Like
+from .serializers import UserSerializer, PostSerializer, CommentSerializer, LikeSerializer, FollowSerializer, CustomTokenObtainPairSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from .permissions import IsAuthorOrReadOnly, IsPostAuthor
 from .logger import SingletonLogger
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from rest_framework_simplejwt.tokens import RefreshToken
 
 logger = SingletonLogger().get_logger()
+
+@login_required
+def home(request):
+    return render(request, 'home.html')
+
+@login_required
+def main_app(request):
+    return render(request, 'main_app.html')
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]
+
+class LoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = User.objects.filter(username=username).first()
+        if user and user.check_password(password):
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            })
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 # USER VIEWS    
 class UserListCreateView(generics.ListCreateAPIView):
@@ -260,6 +297,29 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     def perform_destroy(self, instance):
         logger.info(f'User deleted: {instance.username}')
         instance.delete()
+
+class FollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk, format=None):
+        user_to_follow = get_object_or_404(User, pk=pk)
+        follow, created = Follow.objects.get_or_create(follower=request.user, following=user_to_follow)
+        if created:
+            logger.info(f'{request.user.username} followed {user_to_follow.username}')
+            return Response({"status": "followed"}, status=status.HTTP_200_OK)
+        return Response({"status": "already following"}, status=status.HTTP_400_BAD_REQUEST)
+
+class UnfollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk, format=None):
+        user_to_unfollow = get_object_or_404(User, pk=pk)
+        follow = Follow.objects.filter(follower=request.user, following=user_to_unfollow).first()
+        if follow:
+            follow.delete()
+            logger.info(f'{request.user.username} unfollowed {user_to_unfollow.username}')
+            return Response({"status": "unfollowed"}, status=status.HTTP_200_OK)
+        return Response({"status": "not following"}, status=status.HTTP_400_BAD_REQUEST)
 
 # POST VIEWS
 class PostListCreateView(generics.ListCreateAPIView):
@@ -327,29 +387,25 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
         logger.info(f'Comment deleted by {instance.author.username}: {instance.text[:30]}')
         instance.delete()
 
-class LikeCommentView(generics.UpdateAPIView):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]  # Only authenticated users can like comments
+class LikeCommentView(APIView):
+    permission_classes = [IsAuthenticated]
 
-    def patch(self, request, *args, **kwargs):
-        comment = self.get_object()
+    def post(self, request, pk, format=None):
+        comment = get_object_or_404(Comment, pk=pk)
         comment.likes.add(request.user)
         comment.save()
         logger.info(f'Comment liked by {request.user.username}: {comment.text[:30]}')
-        return Response({"status": "liked"}, status=status.HTTP_200_OK)
+        return Response({'status': 'Comment liked'}, status=status.HTTP_200_OK)
 
-class UnlikeCommentView(generics.UpdateAPIView):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]  # Only authenticated users can unlike comments
+class UnlikeCommentView(APIView):
+    permission_classes = [IsAuthenticated]
 
-    def patch(self, request, *args, **kwargs):
-        comment = self.get_object()
+    def post(self, request, pk, format=None):
+        comment = get_object_or_404(Comment, pk=pk)
         comment.likes.remove(request.user)
         comment.save()
         logger.info(f'Comment unliked by {request.user.username}: {comment.text[:30]}')
-        return Response({"status": "unliked"}, status=status.HTTP_200_OK)
+        return Response({'status': 'Comment unliked'}, status=status.HTTP_200_OK)
 
 # ADMIN ONLY VIEW
 class AdminOnlyView(APIView):
@@ -358,3 +414,63 @@ class AdminOnlyView(APIView):
     def get(self, request):
         logger.info(f'Admin access by {request.user.username}')
         return Response({"message": "Welcome, Admin!"})
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}!')
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
+
+@login_required
+def home(request):
+    return render(request, 'home.html')
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk=None):
+        post = get_object_or_404(Post, pk=pk)
+        post.likes.add(request.user)
+        post.save()
+        logger.info(f'Post liked by {request.user.username}: {post.content[:30]}')
+        return Response({'status': 'Post liked'}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def unlike(self, request, pk=None):
+        post = get_object_or_404(Post, pk=pk)
+        post.likes.remove(request.user)
+        post.save()
+        logger.info(f'Post unliked by {request.user.username}: {post.content[:30]}')
+        return Response({'status': 'Post unliked'}, status=status.HTTP_200_OK)
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk=None):
+        comment = get_object_or_404(Comment, pk=pk)
+        comment.likes.add(request.user)
+        comment.save()
+        logger.info(f'Comment liked by {request.user.username}: {comment.text[:30]}')
+        return Response({'status': 'Comment liked'}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def unlike(self, request, pk=None):
+        comment = get_object_or_404(Comment, pk=pk)
+        comment.likes.remove(request.user)
+        comment.save()
+        logger.info(f'Comment unliked by {request.user.username}: {comment.text[:30]}')
+        return Response({'status': 'Comment unliked'}, status=status.HTTP_200_OK)

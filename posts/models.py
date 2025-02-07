@@ -87,9 +87,8 @@ class Comment(models.Model):
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from .validators import validate_no_special_characters
 
-
+# ----- User Model -----
 class User(AbstractUser):
     email = models.EmailField(unique=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
@@ -97,29 +96,12 @@ class User(AbstractUser):
     is_online = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='posts_user_set',  # Add related_name to avoid clash
-        blank=True,
-        help_text='The groups this user belongs to.',
-        verbose_name='groups',
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='posts_user_set',  # Add related_name to avoid clash
-        blank=True,
-        help_text='Specific permissions for this user.',
-        verbose_name='user permissions',
-    )
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
-
     def __str__(self):
         return self.username
 
+# ----- Post Model -----
 class Post(models.Model):
-    content = models.TextField(validators=[validate_no_special_characters])
+    content = models.TextField()
     media = models.ImageField(upload_to='post_media/', blank=True, null=True)
     author = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
@@ -131,6 +113,7 @@ class Post(models.Model):
     def total_likes(self):
         return self.likes.count()
 
+# ----- Comment Model -----
 class Comment(models.Model):
     text = models.TextField()
     author = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
@@ -144,3 +127,24 @@ class Comment(models.Model):
 
     def total_likes(self):
         return self.likes.count()
+
+# ----- Like Model -----
+class Like(models.Model):
+    user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='post_likes', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'post')
+
+# ----- Follow Model -----
+class Follow(models.Model):
+    follower = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
+    following = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('follower', 'following')
+
+    def __str__(self):
+        return f"{self.follower.username} follows {self.following.username}"

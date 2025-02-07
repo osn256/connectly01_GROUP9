@@ -1,5 +1,5 @@
 import factory
-from .models import User, Post, Comment
+from .models import User, Post, Comment, Follow
 
 class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -45,3 +45,11 @@ class CommentFactory(factory.django.DjangoModelFactory):
         if extracted:
             for user in extracted:
                 self.likes.add(user)
+
+class FollowFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Follow
+
+    follower = factory.SubFactory(UserFactory)
+    following = factory.SubFactory(UserFactory)
+    created_at = factory.Faker('date_time')
