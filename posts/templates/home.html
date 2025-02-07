@@ -1,0 +1,41 @@
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <h2>Welcome, {{ user.username }}!</h2>
+    <p><a href="{% url 'logout' %}">Logout</a></p>
+</body>
+</html>-->
+
+<!-- filepath: /Users/macbookpro/Documents/connectlyG9/connectly01_GROUP9/posts/templates/home.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <h2>Welcome, {{ user.username }}!</h2>
+    <p><a href="{% url 'logout' %}">Logout</a></p>
+    <h3>Posts</h3>
+    {% for post in posts %}
+        <div>
+            <p>{{ post.author.username }}: {{ post.content }}</p>
+            <p>Likes: {{ post.likes.count }}</p>
+            <p><a href="{% url 'like_post' post.id %}">Like</a></p>
+            <p><a href="{% url 'unlike_post' post.id %}">Unlike</a></p>
+            <h4>Comments</h4>
+            {% for comment in post.comments.all %}
+                <div>
+                    <p>{{ comment.author.username }}: {{ comment.text }}</p>
+                    <p>Likes: {{ comment.likes.count }}</p>
+                    <p><a href="{% url 'like_comment' comment.id %}">Like</a></p>
+                    <p><a href="{% url 'unlike_comment' comment.id %}">Unlike</a></p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</body>
+</html>
+

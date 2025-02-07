@@ -79,7 +79,20 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 from rest_framework import serializers
-from .models import User, Post, Comment
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from .models import User, Post, Comment, Like, Follow
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        # Add custom claims here if needed
+        return token
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data.update({'username': self.user.username})
+        return data
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -99,25 +112,9 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-class CommentSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
-    replies = serializers.SerializerMethodField()
-    likes_count = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Comment
-        fields = ['id', 'text', 'author', 'post', 'parent', 'likes_count', 'replies', 'created_at']
-
-    def get_replies(self, obj):
-        replies = obj.replies.all()
-        return CommentSerializer(replies, many=True).data
-
-    def get_likes_count(self, obj):
-        return obj.total_likes()
-
 class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
-    comments = CommentSerializer(many=True, read_only=True)
+    comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     likes_count = serializers.SerializerMethodField()
 
     class Meta:
@@ -126,3 +123,28 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_likes_count(self, obj):
         return obj.total_likes()
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = UserSerializer(read_only=True)
+    replies = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'text', 'author', 'post', 'created_at', 'replies']
+
+    def get_replies(self, obj):
+        replies = obj.replies.all()
+        return CommentSerializer(replies, many=True).data
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ['id', 'user', 'post', 'created_at']
+
+class FollowSerializer(serializers.ModelSerializer):
+    follower = UserSerializer(read_only=True)
+    following = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Follow
+        fields = ['id', 'follower', 'following', 'created_at']

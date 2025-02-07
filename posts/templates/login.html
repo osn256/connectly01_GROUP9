@@ -1,0 +1,149 @@
+<!-- filepath: /Users/macbookpro/Documents/connectlyG9/connectly01_GROUP9/posts/templates/login.html -->
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connectly App Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        p {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+    </div>
+</body>
+</html>-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connectly App Login Page</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color:rgb(255, 255, 255);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: white;
+            padding: 40px 35px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+        h2 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #f57c00; /* Orange color */
+        }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="text"], input[type="password"] {
+            border: 1px solid #dddfe2;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+            background-color: #f7f8fa;
+        }
+        .login-button {
+            background-color: #f57c00; /* Orange color */
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .login-button:hover {
+            background-color: #e65100; /* Darker orange shade */
+        }
+        .forgot-password {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .forgot-password a {
+            color: #f57c00; /* Orange color */
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .sign-up-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .sign-up-link a {
+            color: #f57c00; /* Orange color */
+            font-size: 14px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Connectly_G9 Design v.2</h2>
+        <form method="POST" class="login-form">
+            {% csrf_token %}
+            <!-- Render Django form fields -->
+            {{ form.as_p }}
+            <!-- Login button -->
+            <button type="submit" class="login-button">Log In</button>
+        </form>
+        <div class="forgot-password">
+            <a href="#">Forgotten account?</a>
+        </div>
+        <div class="sign-up-link">
+            <p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+        </div>
+    </div>
+</body>
+</html>
