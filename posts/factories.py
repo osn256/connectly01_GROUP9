@@ -41,7 +41,6 @@ class CommentFactory(factory.django.DjangoModelFactory):
     def likes(self, create, extracted, **kwargs):
         if not create:
             return
-
         if extracted:
             for user in extracted:
                 self.likes.add(user)
@@ -49,7 +48,8 @@ class CommentFactory(factory.django.DjangoModelFactory):
 class FollowFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Follow
-
     follower = factory.SubFactory(UserFactory)
     following = factory.SubFactory(UserFactory)
     created_at = factory.Faker('date_time')
+
+#_____________________________________________________________added for admin access views

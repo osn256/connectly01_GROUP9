@@ -27,9 +27,16 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL = 'main_app'         #ADDED 2 7 2025_ 9:12 PM for WEB LOGIN    
-LOGIN_REDIRECT_URL = 'home'             #ADDED 2 5 2025_ 9:12 PM for WEB LOGIN
-LOGOUT_REDIRECT_URL = 'login'           #ADDED 2 5 2025_ 9:12 PM for WEB LOGIN
+#LOGIN_REDIRECT_URL = '/'                #ADDED 2 8 2025_ 8:09 PM for OTP    
+#LOGOUT_REDIRECT_URL = 'login'           #ADDED 2 5 2025_ 9:12 PM for WEB LOGIN
+#LOGIN_REDIRECT_URL = '/home/'           # Redirect to home page after login
+#LOGIN_REDIRECT_URL = '/main/'           # Redirect to home page after login
+
+
+
+LOGIN_REDIRECT_URL = '/main/'  # Redirect to main app after login
+LOGOUT_REDIRECT_URL = '/login/'  # Redirect to login page after logout
+
 
 
 # Application definition
@@ -45,9 +52,20 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'posts',
     'django_extensions',                #ADDED DJANGO EXTENSIONS 2 5 2025
-
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',  # Add providers as needed
 ]
+
 AUTH_USER_MODEL = 'posts.User'          #ADDED 2 56 2025_ 12:59 PM for WEB LOGIN
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SITE_ID = 1
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -68,6 +86,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # added 2 8 2025_ 8:14 PM for OTP
+
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -171,7 +191,6 @@ LOGGING = {
     },
 }
 
-# ...existing code...
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 

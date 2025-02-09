@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import views
@@ -28,4 +28,5 @@ urlpatterns = [
 
     # Admin Only View
     path('api/admin/', views.AdminOnlyView.as_view(), name='admin_only'),
+
 ]

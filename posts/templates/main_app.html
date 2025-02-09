@@ -1,47 +1,145 @@
-<!-- filepath: /Users/macbookpro/Documents/connectlyG9/connectly01_GROUP9/posts/templates/main_app.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connectly Main App</title>
+    <title>Main App</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: Orange; <!--#333;-->
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #77aaff 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header ul {
+            padding: 0;
+            list-style: none;
+        }
+        header li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+        header #branding {
+            float: left;
+        }
+        header #branding h1 {
             margin: 0;
         }
-        .main-app-container {
-            background-color: white;
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+        .post, .comment {
+            background: #fff;
             padding: 20px;
-            border-radius: 8px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(223, 94, 19, 0.1);
+        }
+        .post h3, .comment h4 {
+            margin: 0;
+        }
+        .post p, .comment p {
+            margin: 10px 0;
+        }
+        .post img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+        .post-form {
+            background: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        h2 {
-            margin-bottom: 20px;
+        .post-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
-        button {
-            background-color: #4CAF50;
-            color: white;
+        .post-form input[type="file"] {
+            margin: 10px 0;
+        }
+        .post-form button {
+            background: #333;
+            color: #fff;
             border: none;
             padding: 10px 20px;
-            border-radius: 5px;
             cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="main-app-container">
-        <h2>Welcome to Connectly</h2>
-        <p>This is the main app page.</p>
-        <button onclick="window.location.href='{% url 'logout' %}'">Logout</button>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1>Connectly_G9</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li>Welcome, {{ user.username }}!</li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="container">
+        <div class="post-form">
+            <h2>Create a Post</h2>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <textarea name="content" placeholder="What's on your mind?" required></textarea>
+                <input type="file" name="media">
+                <button type="submit">Post</button>
+            </form>
+        </div>
+        <h2>Posts</h2>
+        {% for post in posts %}
+            <div class="post">
+                <h3>{{ post.author.username }}</h3>
+                <p>{{ post.content }}</p>
+                {% if post.media %}
+                    <img src="{{ post.media.url }}" alt="Post media">
+                {% endif %}
+                <p>Likes: {{ post.likes.count }}</p>
+                <p><a href="{% url 'like_post' post.id %}">Like</a> | <a href="{% url 'unlike_post' post.id %}">Unlike</a></p>
+                <h4>Comments</h4>
+                {% for comment in post.comments.all %}
+                    <div class="comment">
+                        <h4>{{ comment.author.username }}</h4>
+                        <p>{{ comment.text }}</p>
+                        <p>Likes: {{ comment.likes.count }}</p>
+                        <p><a href="{% url 'like_comment' comment.id %}">Like</a> | <a href="{% url 'unlike_comment' comment.id %}">Unlike</a></p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
     </div>
 </body>
 </html>
