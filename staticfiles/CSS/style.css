@@ -1,0 +1,180 @@
+html,
+body {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: stretch;
+    background-color: #ffffff;
+}
+
+body,
+button,
+input,
+p,
+a {
+    font-family: "Inter", sans-serif !important;
+}
+
+.button-icon {
+    width: 18px !important;
+    height: 18px !important;
+    max-width: 18px !important;
+    max-height: 18px !important;
+    object-fit: contain;
+    display: inline-block;
+    margin-right: 10px;
+    /* Adds spacing between icon and text */
+    vertical-align: middle;
+}
+
+.main-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/* Background image on the left */
+.left-image {
+    flex: 1;
+    background: url('../Images/connectly\ background\ v2.png') no-repeat center center;
+    background-size: cover;
+}
+
+.login-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form {
+    width: 60%;
+    padding: 20px 40px;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.login-form h1 {
+    font-size: 45px;
+    margin-bottom: 45px;
+    color: #162D3A;
+}
+
+.login-form p {
+    text-align: left;
+    font-size: 16px;
+    color: #313957;
+    line-height: 0.0;
+    margin-bottom: 25px;
+}
+
+/* Style labes */
+.login-form label {
+    font-size: 13px;
+    color: #313957;
+    font-weight: bold;
+}
+
+
+/* Email and password input fields */
+.login-form input {
+    background-color: #F7FBFF;
+    width: 93%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #D4D7E3;
+    border-radius: 5px;
+    color: #313957;
+    font-size: 14px;
+}
+
+.forgot-password-container {
+    width: 100%;
+    text-align: right;
+    margin-top: 13px;
+    font-size: 14px;
+}
+
+.forgot-password-container a {
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: none;
+}
+
+.forgot-password-container a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.or-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 50px 0 30px;
+    width: 100%;
+}
+
+.or-container p {
+    margin: 0 10px;
+    color: #294957;
+    font-weight: none;
+}
+
+.or-container::before,
+.or-container::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #CFDFE2;
+    margin: 0 10px;
+}
+
+/* General button styles */
+.login-form button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: #F7FBFF;
+    cursor: pointer;
+}
+
+/* Specific styles for the primary 'Sign in' button */
+.primary-button {
+    font-size: 18px;
+    background-color: #162D3A;
+    margin-top: 25px;
+}
+
+/* Google login button */
+.google-login {
+    background-color: #F7FBFF;
+    color: #313957 !important;
+    font-weight: none;
+    border: 1px solid #CCCCCC;
+    margin-bottom: 15px;
+}
+
+/* Facebook login button */
+.facebook-login {
+    background-color: #F7FBFF;
+    color: #313957 !important;
+    font-weight: none;
+    border: 1px solid #CCCCCC;
+    margin-bottom: 30px;
+}
+
+.login-form a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.login-form p:last-of-type {
+    text-align: center;
+    font-size: 14px;
+}
