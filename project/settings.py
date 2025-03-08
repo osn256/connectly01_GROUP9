@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',  # Add providers as needed
+    'allauth.socialaccount.providers.facebook',
+    'social_django',  
 ]
 
 AUTH_USER_MODEL = 'posts.User'          #ADDED 2 56 2025_ 12:59 PM for WEB LOGIN
@@ -67,31 +69,57 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_ID = 1
 
+# Django Allauth Configuration 2/17/25
+# Use only username for login
+ACCOUNT_LOGIN_METHODS = {'username'}
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+
+# Skip Django-Allauth confirmation screen
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# Google OAuth Settings 2/17/25
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
+
+# Facebook OAuth Settings 2/17/25
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'FIELDS': [
+            'id', 'email', 'first_name', 'last_name', 'name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v17.0',  
+    }
+}
+
+# Your facebook credentials
+SOCIAL_AUTH_FACEBOOK_KEY = '1162194018613222'  
+SOCIAL_AUTH_FACEBOOK_SECRET = 'b6e828df2ee03c38837acee6e7e85443'
+
+# Disable signup
+SOCIALACCOUNT_SIGNUP = False
+
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
     ),
-    
     'DEFAULT_PERMISSION_CLASSES': (
         #'rest_framework.permissions.AllowAny',  # Allow any user to access the API
         'rest_framework.permissions.IsAuthenticated',  # Allow only authenticated users to access the API
     ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
-
-    'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.JSONParser',
-        'rest_framework.parsers.MultiPartParser',
-        'rest_framework.parsers.FormParser',
-    ),
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    ),
-
 }
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -107,10 +135,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'project.urls'
 
+import os
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'posts/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,6 +152,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
@@ -221,7 +252,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/' 
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'posts/static')] 
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

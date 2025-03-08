@@ -15,86 +15,39 @@
 </html> -->
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Register</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .register-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 400px; /* Increased width for better readability */
-            text-align: center;
-        }
-
-        .register-container h2 {
-            color: #f27318;
-            margin-bottom: 20px;
-        }
-
-        .register-container form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .register-container input {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 100%; /* Ensure input fields take full width */
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
-        }
-
-        .register-container button {
-            padding: 10px;
-            background-color: #f27318;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .register-container button:hover {
-            background-color: #e65c00;
-        }
-
-        .login-link {
-            margin-top: 10px;
-        }
-
-        .login-link a {
-            color: #f27318;
-            text-decoration: none;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/register.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connectly | Register</title>
 </head>
+
 <body>
     <div class="register-container">
-        <h2>Connectly_G9_MMDC</h2>
+        <h2>Connectly</h2>
         <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password1" placeholder="Password" required>
+            <input type="password" name="password2" placeholder="Confirm Password" required>
+            <div class="password-requirements">
+                <p>Your password must:</p>
+                <ul>
+                    <li>Not be too similar to your other personal information.</li>
+                    <li>Contain at least 8 characters.</li>
+                    <li>Not be a commonly used password.</li>
+                    <li>Not be entirely numeric.</li>
+                </ul>
+            </div>
             <button type="submit">Register</button>
         </form>
         <div class="login-link">
-            Already have an account? <a href="{% url 'login' %}">Login</a>
+            Already have an account? <a href="{% url 'login' %}">Log in</a>
         </div>
     </div>
 </body>
+
 </html>

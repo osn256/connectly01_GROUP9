@@ -2,12 +2,13 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main App</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="/static/CSS/style.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,11 +16,13 @@
             padding: 0;
             background-color: #f4f4f4;
         }
+
         .container {
             width: 80%;
             margin: auto;
             overflow: hidden;
         }
+
         header {
             background: #333;
             color: #fff;
@@ -27,49 +30,63 @@
             min-height: 70px;
             border-bottom: #77aaff 3px solid;
         }
+
         header a {
-            color:rgb(250, 128, 5) 3px solid;
+            color: rgb(250, 128, 5) 3px solid;
             text-decoration: none;
             text-transform: uppercase;
             font-size: 16px;
         }
+
         header ul {
             padding: 0;
             list-style: none;
         }
+
         header li {
             float: left;
             display: inline;
             padding: 0 20px 0 20px;
         }
+
         header #branding {
             float: left;
         }
+
         header #branding h1 {
             margin: 0;
         }
+
         header nav {
             float: right;
             margin-top: 10px;
         }
-        .post, .comment {
+
+        .post,
+        .comment {
             background: #fff;
             padding: 20px;
             margin: 20px 0;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(255, 119, 0, 0.1);
         }
-        .post h3, .comment h4 {
+
+        .post h3,
+        .comment h4 {
             margin: 0;
         }
-        .post p, .comment p {
+
+        .post p,
+        .comment p {
             margin: 10px 0;
         }
+
         .post img {
             max-width: 100%;
             height: auto;
             margin-top: 10px;
         }
+
         .post-form {
             background: #fff;
             padding: 20px;
@@ -77,6 +94,7 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         .post-form textarea {
             width: 100%;
             padding: 10px;
@@ -84,9 +102,11 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+
         .post-form input[type="file"] {
             margin: 10px 0;
         }
+
         .post-form button {
             background: #333;
             color: #fff;
@@ -97,6 +117,7 @@
         }
     </style>
 </head>
+
 <body>
     <header>
         <div class="container">
@@ -123,26 +144,28 @@
         </div>
         <h2>Posts</h2>
         {% for post in posts %}
-            <div class="post">
-                <h3>{{ post.author.username }}</h3>
-                <p>{{ post.content }}</p>
-                {% if post.media %}
-                    <img src="{{ post.media.url }}" alt="Post media">
-                {% endif %}
-                <p>Likes: {{ post.likes.count }}</p>
-                <p><a href="{% url 'like_post' post.id %}">Like</a> | <a href="{% url 'unlike_post' post.id %}">Unlike</a></p>
-                <h4>Comments</h4>
-                {% for comment in post.comments.all %}
-                    <div class="comment">
-                        <h4>{{ comment.author.username }}</h4>
-                        <p>{{ comment.text }}</p>
-                        <p>Likes: {{ comment.likes.count }}</p>
-                        <p><a href="{% url 'like_comment' comment.id %}">Like</a> | <a href="{% url 'unlike_comment' comment.id %}">Unlike</a></p>
-                    </div>
-                {% endfor %}
+        <div class="post">
+            <h3>{{ post.author.username }}</h3>
+            <p>{{ post.content }}</p>
+            {% if post.media %}
+            <img src="{{ post.media.url }}" alt="Post media">
+            {% endif %}
+            <p>Likes: {{ post.likes.count }}</p>
+            <p><a href="{% url 'like_post' post.id %}">Like</a> | <a href="{% url 'unlike_post' post.id %}">Unlike</a>
+            </p>
+            <h4>Comments</h4>
+            {% for comment in post.comments.all %}
+            <div class="comment">
+                <h4>{{ comment.author.username }}</h4>
+                <p>{{ comment.text }}</p>
+                <p>Likes: {{ comment.likes.count }}</p>
+                <p><a href="{% url 'like_comment' comment.id %}">Like</a> | <a
+                        href="{% url 'unlike_comment' comment.id %}">Unlike</a></p>
             </div>
+            {% endfor %}
+        </div>
         {% endfor %}
     </div>
 </body>
-</html>
 
+</html>

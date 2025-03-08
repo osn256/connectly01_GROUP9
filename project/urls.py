@@ -6,6 +6,9 @@ from posts import views as post_views
 from . import views as project_views  # Import views from the current directory
 from rest_framework.routers import DefaultRouter
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 router = DefaultRouter()
 router.register(r'users', project_views.UserViewSet)
 router.register(r'posts', project_views.PostViewSet)
@@ -17,7 +20,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
     path('register/', post_views.register, name='register'),
     path('home/', post_views.home, name='home'),
-    path('main/', post_views.main_app, name='main_app'),
+    path('main/', post_views.main_app, name='main'),
     path('profile/', project_views.profileView, name='profile'),
     path('api/', include(router.urls)),
     path('posts/', include('posts.urls')),
@@ -28,3 +31,9 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),  # Added for allauth
     path('', post_views.home, name='home'),  # Root URL
 ]
+
+# server static files in development mode
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

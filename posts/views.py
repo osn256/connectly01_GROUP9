@@ -23,8 +23,28 @@ def home(request):
 
 @login_required
 def main_app(request):
+    # Handle the POST request
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        media = request.FILES.get('media')  # If you're uploading a file
+
+        if content:  # Only create a post if content is provided
+            new_post = Post.objects.create(
+                author=request.user,
+                content=content,
+                media=media
+            )
+            # Optionally, redirect to the main page after posting (to avoid resubmitting the form on refresh)
+            return redirect('main')  # Make sure 'main' matches your URL name
+        else:
+            # If no content, display an error message
+            messages.error(request, "Content cannot be empty!")
+            return redirect('main')  # Stay on the same page if there's an error
+
+    # Handle the GET request to display posts
     posts = Post.objects.all().order_by('-created_at')
     return render(request, 'main_app.html', {'posts': posts})
+
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()

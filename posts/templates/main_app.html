@@ -1,117 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main App</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-        }
-        header {
-            background: Orange; <!--#333;-->
-            color: #fff;
-            padding-top: 30px;
-            min-height: 70px;
-            border-bottom: #77aaff 3px solid;
-        }
-        header a {
-            color: #fff;
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 16px;
-        }
-        header ul {
-            padding: 0;
-            list-style: none;
-        }
-        header li {
-            float: left;
-            display: inline;
-            padding: 0 20px 0 20px;
-        }
-        header #branding {
-            float: left;
-        }
-        header #branding h1 {
-            margin: 0;
-        }
-        header nav {
-            float: right;
-            margin-top: 10px;
-        }
-        .post, .comment {
-            background: #fff;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(223, 94, 19, 0.1);
-        }
-        .post h3, .comment h4 {
-            margin: 0;
-        }
-        .post p, .comment p {
-            margin: 10px 0;
-        }
-        .post img {
-            max-width: 100%;
-            height: auto;
-            margin-top: 10px;
-        }
-        .post-form {
-            background: #fff;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .post-form textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        .post-form input[type="file"] {
-            margin: 10px 0;
-        }
-        .post-form button {
-            background: #333;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-    </style>
+    <title>Connectly | Newsfeed</title>
+
+    <!-- Linking to Inter font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Linking to main_app.css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/main_app.css' %}">
 </head>
+
 <body>
+
+    <!-- Navigation Bar -->
     <header>
-        <div class="container">
-            <div id="branding">
-                <h1>Connectly_G9</h1>
+        <div class="navbar">
+            <div class="app-logo">
+                <img src="{% static 'Images/connectly-logo.png' %}" alt="Logo">
             </div>
-            <nav>
-                <ul>
-                    <li>Welcome, {{ user.username }}!</li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
-                </ul>
-            </nav>
+            <span class="app-name">Connectly</span>
+            <div class="navbar-right">
+                <!-- User's Name and Logout Icon -->
+                <span class="user-name">{{ user.username }}</span>
+                <a href="{% url 'logout' %}" class="logout-icon">
+                    <img src="{% static 'Images/logout.png' %}" alt="Logout Icon">
+                </a>
+            </div>
         </div>
     </header>
-    <div class="container">
+
+    <!-- Newsfeed Section -->
+    <div class="newsfeed">
+        <!-- User Post Form -->
         <div class="post-form">
-            <h2>Create a Post</h2>
+            <h3>{{ user.username }}</h3> <!-- Displaying user name here -->
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <textarea name="content" placeholder="What's on your mind?" required></textarea>
@@ -119,27 +45,90 @@
                 <button type="submit">Post</button>
             </form>
         </div>
+
         <h2>Posts</h2>
         {% for post in posts %}
-            <div class="post">
+        <div class="post">
+            <div class="post-header">
                 <h3>{{ post.author.username }}</h3>
-                <p>{{ post.content }}</p>
-                {% if post.media %}
-                    <img src="{{ post.media.url }}" alt="Post media">
-                {% endif %}
-                <p>Likes: {{ post.likes.count }}</p>
-                <p><a href="{% url 'like_post' post.id %}">Like</a> | <a href="{% url 'unlike_post' post.id %}">Unlike</a></p>
+                <p>{{ post.created_at }}</p>
+            </div>
+
+            <p>{{ post.content }}</p>
+            {% if post.media %}
+            <img src="{{ post.media.url }}" alt="Post media">
+            {% endif %}
+
+            <hr class="post-divider">
+
+            <!-- Like Post Section -->
+            <!-- Like Post Section -->
+            <div class="like-section">
+                <span>Likes: {{ post.likes.count }}</span>
+                <a href="{% url 'like_post' post.id %}">
+                    Like
+                    <img src="{% static 'Images/like-button.png' %}" alt="Like Icon">
+                </a>
+                <a href="{% url 'unlike_post' post.id %}">
+                    Unlike
+                    <img src="{% static 'Images/unlike.png' %}" alt="Unlike Icon">
+                </a>
+            </div>
+
+            <hr class="post-divider">
+
+            <!-- Comment Section -->
+            <div class="comments-section">
                 <h4>Comments</h4>
+                <form action="{% url 'comment_create' %}" method="POST">
+                    {% csrf_token %}
+                    <textarea name="text" placeholder="Add a comment..." required></textarea>
+                    <button type="submit">Post Comment</button>
+                </form>
+
                 {% for comment in post.comments.all %}
-                    <div class="comment">
-                        <h4>{{ comment.author.username }}</h4>
-                        <p>{{ comment.text }}</p>
-                        <p>Likes: {{ comment.likes.count }}</p>
-                        <p><a href="{% url 'like_comment' comment.id %}">Like</a> | <a href="{% url 'unlike_comment' comment.id %}">Unlike</a></p>
+                <div class="comment">
+                    <p><strong>{{ comment.author.username }}</strong>: {{ comment.text }}</p>
+
+                    <!-- Like Button -->
+                    <div class="like-section">
+                        <span>Likes: {{ post.likes.count }}</span>
+                        <a href="{% url 'like_post' post.id %}">Like</a>
+                        <a href="{% url 'unlike_post' post.id %}">Unlike</a>
                     </div>
+
+                    <!-- Comment Section -->
+                    <div class="comments-section">
+                        <h4>Comments</h4>
+
+                        <!-- Form to Add Comment -->
+                        <form method="POST" action="{% url 'add_comment' post.id %}">
+                            {% csrf_token %}
+                            <textarea name="text" placeholder="Add a comment..." required></textarea>
+                            <button type="submit">Post</button>
+                        </form>
+
+                        <!-- Render Comments -->
+                        {% for comment in post.comments.all %}
+                        <div class="comment">
+                            <p><strong>{{ comment.author.username }}</strong>: {{ comment.text }}</p>
+
+                            <!-- Like/Unlike Comment -->
+                            <div class="like-section">
+                                <span>Likes: {{ comment.likes.count }}</span>
+                                <a href="{% url 'like_comment' comment.id %}">Like</a>
+                                <a href="{% url 'unlike_comment' comment.id %}">Unlike</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
                 {% endfor %}
             </div>
+        </div>
         {% endfor %}
     </div>
+
 </body>
+
 </html>

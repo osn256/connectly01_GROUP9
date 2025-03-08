@@ -17,7 +17,7 @@ urlpatterns = [
     path('api/posts/<int:pk>/like/', views.LikePostView.as_view(), name='like_post'),
     path('api/posts/<int:pk>/unlike/', views.UnlikePostView.as_view(), name='unlike_post'),
 
-    path('api/comments/', views.CommentListCreateView.as_view(), name='comment_list_create'),
+    path('api/comments/', views.CommentListCreateView.as_view(), name='comment_create'),
     path('api/comments/<int:pk>/', views.CommentDetailView.as_view(), name='comment_detail'),
     path('api/comments/<int:pk>/like/', views.LikeCommentView.as_view(), name='like_comment'),
     path('api/comments/<int:pk>/unlike/', views.UnlikeCommentView.as_view(), name='unlike_comment'),

@@ -1,149 +1,78 @@
-<!-- filepath: /Users/macbookpro/Documents/connectlyG9/connectly01_GROUP9/posts/templates/login.html -->
-<!--<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connectly App Login Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            margin-bottom: 20px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        p {
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Login</button>
-        </form>
-        <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
-    </div>
-</body>
-</html>-->
-
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <!-- Load static files -->
+    {% load static %}
+    {% load socialaccount %} <!-- Added this to enable Google login -->
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/style.css' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connectly App Login Page</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color:rgb(255, 255, 255);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background-color: white;
-            padding: 40px 35px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 350px;
-        }
-        h2 {
-            font-size: 24px;
-            text-align: center;
-            margin-bottom: 30px;
-            color: #f57c00; /* Orange color */
-        }
-        .login-form {
-            display: flex;
-            flex-direction: column;
-        }
-        input[type="text"], input[type="password"] {
-            border: 1px solid #dddfe2;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 14px;
-            background-color: #f7f8fa;
-        }
-        .login-button {
-            background-color: #f57c00; /* Orange color */
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .login-button:hover {
-            background-color: #e65100; /* Darker orange shade */
-        }
-        .forgot-password {
-            text-align: center;
-            margin-top: 10px;
-        }
-        .forgot-password a {
-            color: #f57c00; /* Orange color */
-            font-size: 14px;
-            text-decoration: none;
-        }
-        .sign-up-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .sign-up-link a {
-            color: #f57c00; /* Orange color */
-            font-size: 14px;
-            text-decoration: none;
-        }
-    </style>
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <div class="login-container">
-        <h2>Connectly_G9 Design v.2</h2>
-        <form method="POST" class="login-form">
-            {% csrf_token %}
-            <!-- Render Django form fields -->
-            {{ form.as_p }}
-            <!-- Login button -->
-            <button type="submit" class="login-button">Log In</button>
-        </form>
-        <div class="forgot-password">
-            <a href="#">Forgotten account?</a>
+    <div class="main-container">
+        <!-- Left side image -->
+        <div class="left-image">
+            <img src="{% static 'Images/connectly background v2.png' %}" alt="Background Image">
         </div>
-        <div class="sign-up-link">
-            <p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+
+        <!-- Right side login form -->
+        <div class="login-container">
+            <div class="login-form">
+                <h1>Welcome Back</h1>
+                <p>Today is a new day. It's your day.</p>
+                <p>Sign in to start managing your projects.</p>
+
+                <!-- Standard Login Form -->
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <label for="username">Username</label>
+                    <input type="text" name="username" placeholder="Enter your username" required>
+
+                    <label for="password">Password</label>
+                    <input type="password" name="password" placeholder="At least 8 characters" required>
+
+                    <div class="forgot-password-container">
+                        <a href="{% url 'account_reset_password' %}">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="primary-button">Sign in</button>
+                </form>
+
+                <div class="or-container">
+                    <p>Or</p>
+                </div>
+
+                {% load socialaccount %}
+                <!-- Google Login Button -->
+                <div class="google-signin">
+                    <a href="{% provider_login_url 'google' process='login' %}?prompt=select_account">
+                        <button class="google-login">
+                            <img src="{% static 'Images/google-logo.png' %}" class="button-icon"> Sign in with Google
+                        </button>
+                    </a>
+                </div>
+
+
+                <!-- Facebook Login Button -->
+                <div class="facebook-signin">
+                    <a href="{% provider_login_url 'facebook' %}">
+                        <button class="facebook-login">
+                            <img src="{% static 'Images/facebook-logo.png' %}" class="button-icon"> Sign in with
+                            Facebook
+                        </button>
+                    </a>
+                </div>
+
+                <p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+            </div>
         </div>
     </div>
 </body>
+
 </html>

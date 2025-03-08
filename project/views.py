@@ -42,3 +42,4 @@ class UnfollowUserView(APIView):
             follow.delete()
             return Response({"status": "unfollowed"}, status=status.HTTP_200_OK)
         return Response({"status": "not following"}, status=status.HTTP_400_BAD_REQUEST)
+    
