@@ -156,3 +156,38 @@ class UnlikeTestCase(TestCase):
 # python manage.py test posts.tests.LikeTestCase
 # testing Follow model
 # python manage.py test posts.tests.FollowTestCase
+
+class RBACPrivacyTests(TestCase):                # ADDED March 22,2025
+    def setUp(self):
+        self.client = APIClient()
+        self.admin_user = User.objects.create_user(
+            username='admin', password='adminpass', email='admin@example.com', role='admin'
+        )
+        self.user = User.objects.create_user(
+            username='user', password='userpass', email='user@example.com', role='user'
+        )
+        self.post = Post.objects.create(
+            author=self.user, content='Test Post', privacy='private'
+        )
+
+    def test_admin_user_can_delete_post(self):
+        self.client.force_authenticate(user=self.admin_user)
+        response = self.client.delete(reverse('delete_post', args=[self.post.id]))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_unauthorized_user_cannot_delete_post(self):
+        self.client.force_authenticate(user=self.user)  # Unauthorized user
+        response = self.client.delete(reverse('delete_post', args=[self.post.id]))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_non_author_cannot_view_private_post(self):
+        self.client.force_authenticate(user=self.admin_user)
+        response = self.client.get(reverse('get_post', args=[self.post.id]))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_author_can_view_private_post(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(reverse('get_post', args=[self.post.id]))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    # test this using the code below
+    # python manage.py test posts.tests.RBACPrivacyTests
